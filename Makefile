@@ -3,7 +3,7 @@ MODBIN = https://raw.githubusercontent.com/topjohnwu/Magisk/master/scripts/modul
 MODFILES = module.prop customize.sh LICENSE README.md
 THERMAL = thermal_info_config.json thermal-engine.conf
 VER = $(shell grep version= module.prop | cut -d= -f2)
-TARGET = $(addsuffix .zip,$(addsuffix -$(VER),$(NAME)))
+TARGET = $(addsuffix -$(VER).zip,$(NAME))
 OUT = dist
 
 .PHONY: $(OUT) $(THERMAL)
@@ -21,8 +21,12 @@ check:
 clean:
 	@rm -rf dist
 
-pkg: $(THERMAL)
+build: $(THERMAL)
 	@install $(MODFILES) $(OUT)
+
+bundle:
 	@cd dist && zip -qr $(TARGET) META-INF system $(MODFILES)
 
-all: clean pkg check
+all: clean build bundle check
+
+ci: clean build

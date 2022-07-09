@@ -1,0 +1,21 @@
+name: Build archive
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: build
+        run: make ci
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: magisk-Kyrielight-Pixel-Thermal-${{github.ref_name}}
+          path: dist
